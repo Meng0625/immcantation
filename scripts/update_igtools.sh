@@ -18,7 +18,6 @@
 #   ~/apps/changeo
 
 # Set default parameters
-set -e
 PROTOTYPES=false
 PASSWORD_PROMPT=true
 USERNAME_PROMPT=true
@@ -74,38 +73,41 @@ fi
 mkdir -p $HOME/tmp; mkdir -p $TARGET_DIR/presto; mkdir -p $TARGET_DIR/changeo
 
 # Download bits
-echo -e "Downloading tip from repos..."
+echo -e "\n\nDownloading default branch from repos..."
+echo -e "================================================================================\n"
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/javh/presto/get/tip.tar.gz -o $HOME/tmp/presto.tar.gz
+    https://bitbucket.org/javh/presto/get/default.tar.gz -o $HOME/tmp/presto.tar.gz
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/javh/changeo/get/tip.tar.gz -o $HOME/tmp/changeo.tar.gz
+    https://bitbucket.org/javh/changeo/get/default.tar.gz -o $HOME/tmp/changeo.tar.gz
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/javh/alakazam/get/tip.tar.gz -o $HOME/tmp/alakazam.tar.gz
+    https://bitbucket.org/javh/alakazam/get/default.tar.gz -o $HOME/tmp/alakazam.tar.gz
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/uduman/shm/get/tip.tar.gz -o $HOME/tmp/shm.tar.gz
+    https://bitbucket.org/uduman/shm/get/default.tar.gz -o $HOME/tmp/shm.tar.gz
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/dgadala/tigger/get/tip.tar.gz -o $HOME/tmp/tigger.tar.gz
+    https://bitbucket.org/dgadala/tigger/get/default.tar.gz -o $HOME/tmp/tigger.tar.gz
 
 if $PROTOTYPES; then
     curl -# -u "${USERNAME}:${PASSWORD}" \
-        https://bitbucket.org/javh/prototype-prestor/get/tip.tar.gz \
+        https://bitbucket.org/javh/prototype-prestor/get/default.tar.gz \
         -o $HOME/tmp/prototype-prestor.tar.gz
     curl -# -u "${USERNAME}:${PASSWORD}" \
-        https://bitbucket.org/javh/prototype-repertoire/get/tip.tar.gz \
+        https://bitbucket.org/javh/prototype-repertoire/get/default.tar.gz \
         -o $HOME/tmp/prototype-repertoire.tar.gz
     curl -# -u "${USERNAME}:${PASSWORD}" \
-        https://bitbucket.org/javh/prototype-topology/get/tip.tar.gz \
+        https://bitbucket.org/javh/prototype-topology/get/default.tar.gz \
         -o $HOME/tmp/prototype-topology.tar.gz
 fi
 
 
 # Install python tools
-echo -e "Installing presto..."
-tar -zxf $HOME/tmp/presto.tar.gz --wildcards --exclude="tests" --strip-components=1 \
+echo -e "\n\nInstalling presto..."
+echo -e "================================================================================\n"
+tar -zxvf $HOME/tmp/presto.tar.gz --wildcards --exclude="tests" --strip-components=1 \
     -C $TARGET_DIR/presto \*.py
 
-echo -e "Installing changeo..."
-tar -zxf $HOME/tmp/changeo.tar.gz --wildcards --exclude="tests" --strip-components=1 \
+echo -e "\n\nInstalling changeo..."
+echo -e "================================================================================\n"
+tar -zxvf $HOME/tmp/changeo.tar.gz --wildcards --exclude="tests" --strip-components=1 \
     -C $TARGET_DIR/changeo \*.py \*/models
 
 # Install R packages
@@ -116,19 +118,22 @@ RSCRIPT="options(repos=c(CRAN=\"http://cran.rstudio.com\")); \
          build(\"${HOME}/tmp/package_directory\", vignettes=FALSE); \
          install(\"${HOME}/tmp/package_directory\")"
 
-echo -e "Installing alakazam..."
+echo -e "\n\nInstalling alakazam..."
+echo -e "================================================================================\n"
 mkdir -p $HOME/tmp/alakazam
 tar -zxf $HOME/tmp/alakazam.tar.gz --wildcards --exclude="tests" --strip-components=1 \
     -C $HOME/tmp/alakazam
 Rscript -e "${RSCRIPT//package_directory/alakazam}"
 
-echo -e "Installing shm..."
+echo -e "\n\nInstalling shm..."
+echo -e "================================================================================\n"
 mkdir -p $HOME/tmp/shm
 tar -zxf $HOME/tmp/shm.tar.gz --wildcards --exclude="tests" --strip-components=1 \
     -C $HOME/tmp/shm
 Rscript -e "${RSCRIPT//package_directory/shm}"
 
-echo -e "Installing tigger..."
+echo -e "\n\nInstalling tigger..."
+echo -e "================================================================================\n"
 mkdir -p $HOME/tmp/tigger
 tar -zxf $HOME/tmp/tigger.tar.gz --wildcards --exclude="tests" --strip-components=1 \
     -C $HOME/tmp/tigger
@@ -137,19 +142,22 @@ Rscript -e "${RSCRIPT//package_directory/tigger}"
 
 # Install prototype R packages
 if $PROTOTYPES; then
-    echo -e "Installing prototype-prestor..."
+    echo -e "\n\nInstalling prototype-prestor..."
+    echo -e "================================================================================\n"
     mkdir -p $HOME/tmp/prototype-prestor
     tar -zxf $HOME/tmp/prototype-prestor.tar.gz --wildcards --exclude="tests" \
         --strip-components=1 -C $HOME/tmp/prototype-prestor
     Rscript -e "${RSCRIPT//package_directory/prototype-prestor}"
 
-    echo -e "Installing prototype-repertoire..."
+    echo -e "\n\nInstalling prototype-repertoire..."
+    echo -e "================================================================================\n"
     mkdir -p $HOME/tmp/prototype-repertoire
     tar -zxf $HOME/tmp/prototype-repertoire.tar.gz --wildcards --exclude="tests" \
         --strip-components=1 -C $HOME/tmp/prototype-repertoire
     Rscript -e "${RSCRIPT//package_directory/prototype-repertoire}"
 
-    echo -e "Installing prototype-topology..."
+    echo -e "\n\nInstalling prototype-topology..."
+    echo -e "================================================================================\n"
     mkdir -p $HOME/tmp/prototype-topology
     tar -zxf $HOME/tmp/prototype-topology.tar.gz --wildcards --exclude="tests" \
         --strip-components=1 -C $HOME/tmp/prototype-topology
