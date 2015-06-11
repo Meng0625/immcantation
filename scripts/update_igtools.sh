@@ -14,7 +14,6 @@
 #
 # Creates Directories:
 #   ~/tmp
-#   ~/apps/presto
 #   ~/apps/changeo
 
 # Set default parameters
@@ -70,7 +69,7 @@ fi
 
 
 # Create directories
-mkdir -p $HOME/tmp; mkdir -p $TARGET_DIR/presto; mkdir -p $TARGET_DIR/changeo
+mkdir -p $HOME/tmp; mkdir -p $TARGET_DIR/changeo
 
 # Download bits
 echo -e "\n\nDownloading default branch from repos..."
@@ -102,8 +101,11 @@ fi
 # Install python tools
 echo -e "\n\nInstalling presto..."
 echo -e "================================================================================\n"
+mkdir -p $HOME/tmp/presto
 tar -zxvf $HOME/tmp/presto.tar.gz --wildcards --exclude="tests" --strip-components=1 \
-    -C $TARGET_DIR/presto \*.py
+    -C $HOME/tmp/presto
+python $HOME/tmp/presto/setup.py install --user
+
 
 echo -e "\n\nInstalling changeo..."
 echo -e "================================================================================\n"
