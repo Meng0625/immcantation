@@ -2,7 +2,7 @@
 # Script to update presto, changeo, alakazam, shm and tigger
 # 
 # Author:  Jason Anthony Vander Heiden, Mohamed Uduman
-# Date:    2015.02.18
+# Date:    2015.06.17
 # 
 # Arguments:
 #   -u = Bitbucket username. If not specified, username will be prompted.
@@ -75,15 +75,15 @@ mkdir -p $HOME/tmp; mkdir -p $TARGET_DIR/changeo
 echo -e "\n\nDownloading default branch from repos..."
 echo -e "================================================================================\n"
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/javh/presto/get/default.tar.gz -o $HOME/tmp/presto.tar.gz
+    https://bitbucket.org/kleinstein/presto/get/default.tar.gz -o $HOME/tmp/presto.tar.gz
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/javh/changeo/get/default.tar.gz -o $HOME/tmp/changeo.tar.gz
+    https://bitbucket.org/kleinstein/changeo/get/default.tar.gz -o $HOME/tmp/changeo.tar.gz
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/javh/alakazam/get/default.tar.gz -o $HOME/tmp/alakazam.tar.gz
+    https://bitbucket.org/kleinstein/alakazam/get/default.tar.gz -o $HOME/tmp/alakazam.tar.gz
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/uduman/shm/get/default.tar.gz -o $HOME/tmp/shm.tar.gz
+    https://bitbucket.org/kleinstein/shm/get/default.tar.gz -o $HOME/tmp/shm.tar.gz
 curl -# -u "${USERNAME}:${PASSWORD}" \
-    https://bitbucket.org/dgadala/tigger/get/default.tar.gz -o $HOME/tmp/tigger.tar.gz
+    https://bitbucket.org/kleinstein/tigger/get/default.tar.gz -o $HOME/tmp/tigger.tar.gz
 
 if $PROTOTYPES; then
     curl -# -u "${USERNAME}:${PASSWORD}" \
