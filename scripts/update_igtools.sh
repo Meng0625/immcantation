@@ -74,27 +74,35 @@ mkdir -p $HOME/tmp; mkdir -p $TARGET_DIR/changeo
 # Download bits
 echo -e "\n\nDownloading default branch from repos..."
 echo -e "================================================================================\n"
-curl -# -u "${USERNAME}:${PASSWORD}" \
+curl -# -f -u "${USERNAME}:${PASSWORD}" \
     https://bitbucket.org/kleinstein/presto/get/default.tar.gz -o $HOME/tmp/presto.tar.gz
-curl -# -u "${USERNAME}:${PASSWORD}" \
+if [ $? -ne 0 ]; then { echo -e "Download of presto failed." ; exit 1; } fi
+curl -# -f -u "${USERNAME}:${PASSWORD}" \
     https://bitbucket.org/kleinstein/changeo/get/default.tar.gz -o $HOME/tmp/changeo.tar.gz
-curl -# -u "${USERNAME}:${PASSWORD}" \
+if [ $? -ne 0 ]; then { echo -e "Download of changeo failed." ; exit 1; } fi
+curl -# -f -u "${USERNAME}:${PASSWORD}" \
     https://bitbucket.org/kleinstein/alakazam/get/default.tar.gz -o $HOME/tmp/alakazam.tar.gz
-curl -# -u "${USERNAME}:${PASSWORD}" \
+if [ $? -ne 0 ]; then { echo -e "Download of alakazam failed." ; exit 1; } fi
+curl -# -f -u "${USERNAME}:${PASSWORD}" \
     https://bitbucket.org/kleinstein/shm/get/default.tar.gz -o $HOME/tmp/shm.tar.gz
-curl -# -u "${USERNAME}:${PASSWORD}" \
+if [ $? -ne 0 ]; then { echo -e "Download of shm failed." ; exit 1; } fi
+curl -# -f -u "${USERNAME}:${PASSWORD}" \
     https://bitbucket.org/kleinstein/tigger/get/default.tar.gz -o $HOME/tmp/tigger.tar.gz
+if [ $? -ne 0 ]; then { echo -e "Download of tigger failed." ; exit 1; } fi
 
 if $PROTOTYPES; then
-    curl -# -u "${USERNAME}:${PASSWORD}" \
+    curl -# -f -u "${USERNAME}:${PASSWORD}" \
         https://bitbucket.org/javh/prototype-prestor/get/default.tar.gz \
         -o $HOME/tmp/prototype-prestor.tar.gz
-    curl -# -u "${USERNAME}:${PASSWORD}" \
+    if [ $? -ne 0 ]; then { echo -e "Download of prototype-prestor failed." ; exit 1; } fi
+    curl -# -f -u "${USERNAME}:${PASSWORD}" \
         https://bitbucket.org/javh/prototype-repertoire/get/default.tar.gz \
         -o $HOME/tmp/prototype-repertoire.tar.gz
-    curl -# -u "${USERNAME}:${PASSWORD}" \
+    if [ $? -ne 0 ]; then { echo -e "Download of prototype-repertoire failed." ; exit 1; } fi
+    curl -# -f -u "${USERNAME}:${PASSWORD}" \
         https://bitbucket.org/javh/prototype-topology/get/default.tar.gz \
         -o $HOME/tmp/prototype-topology.tar.gz
+    if [ $? -ne 0 ]; then { echo -e "Download of prototype-topology failed." ; exit 1; } fi
 fi
 
 
