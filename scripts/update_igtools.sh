@@ -109,11 +109,11 @@ fi
 # Install python tools
 echo -e "\n\nInstalling presto..."
 echo -e "================================================================================\n"
-mkdir -p $HOME/tmp/presto
+mkdir -p $HOME/tmp/presto; cd $HOME/tmp/presto
 tar -zxvf $HOME/tmp/presto.tar.gz --wildcards --exclude="tests" --strip-components=1 \
     -C $HOME/tmp/presto
 python $HOME/tmp/presto/setup.py install --user
-
+cd -
 
 echo -e "\n\nInstalling changeo..."
 echo -e "================================================================================\n"

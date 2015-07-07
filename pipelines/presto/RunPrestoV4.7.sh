@@ -18,7 +18,7 @@ RUN_ID=$(ls -d ${DATA_DIR}/raw/* | grep ${1} | xargs -n1 basename)
 LOG_FILE=${RUN_ID}_RunLog.out
 FOLDERS=$(ls -d $DATA_DIR/raw/$RUN_ID/*| xargs -n1 basename)
 
-echo "" > $LOG_FILE 
+echo '' > $LOG_FILE
 for F in $FOLDERS
 do
     echo "FOLDER: $F" | tee -a $LOG_FILE 

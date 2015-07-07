@@ -9,16 +9,22 @@
 #        to submitted FASTA files (column 2)
 #   $2 = Output directory
 
+mkdir -p $2/db
+mkdir -p $2/functional
+
 while read FILE_MAP
 do
     FILE_ARRAY=($FILE_MAP)
     BASENAME=$(basename "${FILE_ARRAY[0]}" ".zip")
-    MakeDb.py imgt -i "${FILE_ARRAY[0]}" -s "${FILE_ARRAY[1]}" --outdir $2
+    MakeDb.py imgt -i "${FILE_ARRAY[0]}" -s "${FILE_ARRAY[1]}" --outdir $2/db
     ParseDb.py select -d "$2/${BASENAME}_db-pass.tab" -f FUNCTIONAL -u T \
-        --outname "${BASENAME}_functional"
+        --outname "${BASENAME}_functional" --outdir $2/db
     ParseDb.py select -d "$2/${BASENAME}_functional_parse-select.tab" -f V_CALL J_CALL \
-        -u "IGH" --logic all --regex --outname "${BASENAME}_functional-heavy"
+        -u "IGH" --logic all --regex --outname "${BASENAME}_functional-heavy" \
+        --outdir $2/functional
     ParseDb.py select -d "$2/${BASENAME}_functional_parse-select.tab" -f V_CALL J_CALL \
-        -u "IG[LK]" --logic all --regex --outname "${BASENAME}_functional-light"
+        -u "IG[LK]" --logic all --regex --outname "${BASENAME}_functional-light" \
+        --outdir $2/functional
+    rm "$2/db/${BASENAME}_functional_parse-select.tab"
 done < $1
 

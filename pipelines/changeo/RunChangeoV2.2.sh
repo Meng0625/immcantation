@@ -5,12 +5,12 @@
 # Date:    2015.04.07
 #
 # Required Arguments:
-#   $1 = A two column tab delimited file mapping IMGT zip files (column 1) 
+#   $1 = A two column tab delimited file mapping IMGT zip files (column 1)
 #        to submitted FASTA files (column 2)
 #   $2 = Output directory
 
-SCRIPT="/home/jason/apps/changeo/scripts/ChangeoPipelineV4.0_IMGT.sh"
-GERM_DIR="/mnt/data/germlines/IMGT_Human_2014-08-23"
+SCRIPT="/scratch2/kleinstein/oconnor_mg_memory/scripts/ChangeoPipelineV2.2_IMGT.sh"
+GERM_DIR="/scratch2/kleinstein/oconnor_mg_memory/germlines/IMGT_Human_2015-07-07"
 #GERM_DIR="/mnt/data/germlines/IMGT_Mouse_2014-11-22"
 NPROC=2
 
