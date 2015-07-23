@@ -110,15 +110,19 @@ fi
 echo -e "\n\nInstalling presto..."
 echo -e "================================================================================\n"
 mkdir -p $HOME/tmp/presto; cd $HOME/tmp/presto
-tar -zxvf $HOME/tmp/presto.tar.gz --wildcards --exclude="tests" --strip-components=1 \
+tar -zxf $HOME/tmp/presto.tar.gz --wildcards --exclude="tests" --strip-components=1 \
     -C $HOME/tmp/presto
 python $HOME/tmp/presto/setup.py install --user
 cd -
 
 echo -e "\n\nInstalling changeo..."
 echo -e "================================================================================\n"
-tar -zxvf $HOME/tmp/changeo.tar.gz --wildcards --exclude="tests" --strip-components=1 \
-    -C $TARGET_DIR/changeo \*.py \*/models
+mkdir -p $HOME/tmp/changeo; cd $HOME/tmp/changeo
+tar -zxf $HOME/tmp/changeo.tar.gz --wildcards --exclude="tests" --strip-components=1 \
+    -C $HOME/tmp/changeo
+python $HOME/tmp/changeo/setup.py install --user
+cd -
+
 
 # Install R packages
 RSCRIPT="options(repos=c(CRAN=\"http://cran.rstudio.com\")); \
