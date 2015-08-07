@@ -7,11 +7,11 @@
 #   $1 = run identifier (string to match in folder names within $DATA_DIR/raw)
 
 # Define run parameters
-DATA_DIR=/scratch2/kleinstein/oconnor_mg_memory
-SCRIPT=/scratch2/kleinstein/oconnor_mg_memory/scripts/PrestoPipelineV4.7_AbSeqV3.sh
-PRIMERS1=/scratch2/kleinstein/oconnor_mg_memory/primers/AbSeqV3_Human_R1CPrimers.fasta
-PRIMERS2=/scratch2/kleinstein/oconnor_mg_memory/primers/AbSeqV3_Human_R2TSPrimers.fasta
-NPROC=12
+DATA_DIR=/scratch2/kleinstein/abvitro_abseq_titrations
+SCRIPT=/scratch2/kleinstein/abvitro_abseq_titrations/scripts/PrestoPipelineV4.7_AbSeqV3.sh
+PRIMERS1=/scratch2/kleinstein/abvitro_abseq_titrations/primers/AbSeqV3_Human_R1CPrimers.fasta
+PRIMERS2=/scratch2/kleinstein/abvitro_abseq_titrations/primers/AbSeqV3_Human_R2TSPrimers.fasta
+NPROC=16
 
 # Determine folders
 RUN_ID=$(ls -d ${DATA_DIR}/raw/* | grep ${1} | xargs -n1 basename)

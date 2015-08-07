@@ -1,5 +1,5 @@
 #!/bin/bash
-# Super script to run the pRESTO 0.4.7 pipeline on AbVitro AbSeq (V3) data
+# Super script to run the pRESTO 0.4.7 pipeline on AbVitro V2.5 data
 # 
 # Author:  Jason Anthony Vander Heiden, Gur Yaari, Namita Gupta
 # Date:    2015.05.31
@@ -25,10 +25,10 @@ NPROC=$7
 # Define pipeline steps
 ZIP_FILES=true
 FILTER_LOWQUAL=true
-ALIGN_UIDSETS=false
+ALIGN_UIDSETS=true
 REFERENCE_ASSEMBLY=true
 MASK_LOWQUAL=false
-ALIGN_CREGION=true
+ALIGN_CREGION=false
 
 # FilterSeq run parameters
 FS_QUAL=20
@@ -37,10 +37,10 @@ FS_MASK=30
 # MaskPrimers run parameters
 MP_UIDLEN=17
 MP_R1_MAXERR=0.2
-MP_R2_MAXERR=0.5
+MP_R2_MAXERR=0.2
 MP_CREGION_MAXLEN=100
 MP_CREGION_MAXERR=0.4
-MP_CREGION_PRIMERS="/scratch2/kleinstein/oconnor_mg_memory/primers/AbSeqV3_Human_InternalCRegion.fasta"
+MP_CREGION_PRIMERS="/scratch2/kleinstein/abvitro_abseq_titrations/primers/AbSeqV3_Human_InternalCRegion.fasta"
 
 # AlignSets run parameters
 MUSCLE_EXEC=$HOME/bin/muscle
@@ -117,16 +117,16 @@ fi
 
 # Identify primers and UID 
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "MaskPrimers score"
-MaskPrimers.py score -s $MPR1_FILE -p $R1_PRIMERS --mode cut \
-    --start 0 --maxerror $MP_R1_MAXERR --nproc $NPROC --log PrimerLogR1.log \
+MaskPrimers.py score -s $MPR1_FILE -p $R1_PRIMERS --mode cut --barcode \
+    --start $MP_UIDLEN --maxerror $MP_R1_MAXERR --nproc $NPROC --log PrimerLogR1.log \
     --outname "${OUTNAME}-R1" --outdir . >> $PIPELINE_LOG 2> $ERROR_LOG
-MaskPrimers.py score -s $MPR2_FILE -p $R2_PRIMERS --mode cut \
-    --start $MP_UIDLEN --barcode --maxerror $MP_R2_MAXERR --nproc $NPROC --log PrimerLogR2.log \
+MaskPrimers.py score -s $MPR2_FILE -p $R2_PRIMERS --mode mask \
+    --start 0 --maxerror $MP_R2_MAXERR --nproc $NPROC --log PrimerLogR2.log \
     --outname "${OUTNAME}-R2" --outdir . >> $PIPELINE_LOG 2> $ERROR_LOG
 
 # Assign UIDs to read 1 sequences
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "PairSeq"
-PairSeq.py -1 "${OUTNAME}-R2_primers-pass.fastq" -2 "${OUTNAME}-R1_primers-pass.fastq" \
+PairSeq.py -1 "${OUTNAME}-R1_primers-pass.fastq" -2 "${OUTNAME}-R2_primers-pass.fastq" \
     --1f BARCODE --coord illumina >> $PIPELINE_LOG 2> $ERROR_LOG
 
 # Multiple align UID read groups
@@ -185,7 +185,7 @@ fi
 
 # Assign UIDs to read 1 sequences
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "PairSeq"
-PairSeq.py -1 "${OUTNAME}-R2_consensus-pass.fastq" -2 "${OUTNAME}-R1_consensus-pass.fastq" \
+PairSeq.py -1 "${OUTNAME}-R1_consensus-pass.fastq" -2 "${OUTNAME}-R2_consensus-pass.fastq" \
     --coord presto >> $PIPELINE_LOG 2> $ERROR_LOG
 
 # Assemble paired ends via mate-pair alignment
@@ -327,4 +327,3 @@ fi
 # End
 printf "DONE\n\n"
 cd ../
-
