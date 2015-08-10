@@ -23,6 +23,6 @@ do
     echo `date` | tee -a $LOG_FILE
     F=$(readlink -f $F)
     B=$(basename $F)
-    N=${B/_filter-collapse*/}
+    N=${B/_functional*/}
     $SCRIPT $F $GERM_DIR "${OUT_DIR}/${N}" $N $NPROC | tee -a $LOG_FILE
 done

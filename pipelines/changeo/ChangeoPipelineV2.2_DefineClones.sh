@@ -24,7 +24,7 @@ ZIP_FILES=true
 
 # DefineClones parameters
 DC_MODEL=hs1f
-DC_DIST=0.25
+DC_DIST=0.15
 DC_MODE=gene
 DC_ACT=set
 DC_NORM=len
@@ -48,12 +48,12 @@ echo '' > $ERROR_LOG
 # Start
 echo "DIRECTORY: ${OUTDIR}"
 echo "VERSIONS:"
-echo "  $(AnalyzeAa.py -v 2>&1)"
-echo "  $(CreateGermlines.py -v 2>&1)"
-echo "  $(DefineClones.py -v 2>&1)"
-echo "  $(GapRecords.py -v 2>&1)"
-echo "  $(MakeDb.py -v 2>&1)"
-echo "  $(ParseDb.py -v 2>&1)"
+echo "  $(AnalyzeAa.py --version 2>&1)"
+echo "  $(CreateGermlines.py --version 2>&1)"
+echo "  $(DefineClones.py --version 2>&1)"
+echo "  $(GapRecords.py --version 2>&1)"
+echo "  $(MakeDb.py --version 2>&1)"
+echo "  $(ParseDb.py --version 2>&1)"
 echo -e "\nSTART"
 STEP=0
 

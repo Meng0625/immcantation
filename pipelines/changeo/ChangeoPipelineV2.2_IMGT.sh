@@ -49,12 +49,12 @@ echo '' > $ERROR_LOG
 # Start
 echo "DIRECTORY: ${OUTDIR}"
 echo "VERSIONS:"
-echo "  $(AnalyzeAa.py -v 2>&1)"
-echo "  $(CreateGermlines.py -v 2>&1)"
-echo "  $(DefineClones.py -v 2>&1)"
-echo "  $(GapRecords.py -v 2>&1)"
-echo "  $(MakeDb.py -v 2>&1)"
-echo "  $(ParseDb.py -v 2>&1)"
+echo "  $(AnalyzeAa.py --version 2>&1)"
+echo "  $(CreateGermlines.py --version 2>&1)"
+echo "  $(DefineClones.py --version 2>&1)"
+echo "  $(GapRecords.py --version 2>&1)"
+echo "  $(MakeDb.py --version 2>&1)"
+echo "  $(ParseDb.py --version 2>&1)"
 echo -e "\nSTART"
 STEP=0
 
