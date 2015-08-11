@@ -28,7 +28,6 @@ FILTER_LOWQUAL=true
 ALIGN_UIDSETS=true
 REFERENCE_ASSEMBLY=true
 MASK_LOWQUAL=false
-ALIGN_CREGION=false
 
 # FilterSeq run parameters
 FS_QUAL=20
@@ -38,9 +37,6 @@ FS_MASK=30
 MP_UIDLEN=17
 MP_R1_MAXERR=0.2
 MP_R2_MAXERR=0.2
-MP_CREGION_MAXLEN=100
-MP_CREGION_MAXERR=0.4
-MP_CREGION_PRIMERS="/scratch2/kleinstein/abvitro_abseq_titrations/primers/AbSeqV3_Human_InternalCRegion.fasta"
 
 # AlignSets run parameters
 MUSCLE_EXEC=$HOME/bin/muscle
@@ -236,25 +232,6 @@ if $MASK_LOWQUAL; then
     PH_FILE="${OUTNAME}-MQ_maskqual-pass.fastq"
 fi
 
-if $ALIGN_CREGION; then
-    # Annotate with internal C-region
-    printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "MaskPrimers align"
-    MaskPrimers.py align -s $PH_FILE -p $MP_CREGION_PRIMERS \
-    --maxlen $MP_CREGION_MAXLEN --maxerror $MP_CREGION_MAXERR --mode tag --revpr --skiprc \
-    --failed --log CRegionLog.log --outname "${OUTNAME}-CR" --nproc $NPROC \
-    >> $PIPELINE_LOG 2> $ERROR_LOG
-
-    # Renamer primer field
-    printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "ParseHeaders rename"
-    ParseHeaders.py rename -s "${OUTNAME}-CR_primers-pass.fastq" -f PRIMER -k CREGION \
-        --outname "${OUTNAME}-CR" > /dev/null 2> $ERROR_LOG
-
-    PH_FILE="${OUTNAME}-CR_reheader.fastq"
-    CREGION_FIELD="CREGION"
-else
-    CREGION_FIELD=""
-fi
-
 # Rewrite header with minimum of CONSCOUNT
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "ParseHeaders collapse"
 ParseHeaders.py collapse -s $PH_FILE -f CONSCOUNT --act min \
@@ -264,11 +241,11 @@ ParseHeaders.py collapse -s $PH_FILE -f CONSCOUNT --act min \
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "CollapseSeq"
 if $CS_KEEP; then
     CollapseSeq.py -s "${OUTNAME}-FIN_reheader.fastq" -n $CS_MISS \
-    --uf PRCONS $CREGION_FIELD --cf CONSCOUNT --act sum --inner \
+    --uf PRCONS --cf CONSCOUNT --act sum --inner \
     --keepmiss --outname "${OUTNAME}-FIN" >> $PIPELINE_LOG 2> $ERROR_LOG
 else
     CollapseSeq.py -s "${OUTNAME}-FIN_reheader.fastq" -n $CS_MISS \
-    --uf PRCONS $CREGION_FIELD --cf CONSCOUNT --act sum --inner \
+    --uf PRCONS --cf CONSCOUNT --act sum --inner \
     --outname "${OUTNAME}-FIN" >> $PIPELINE_LOG 2> $ERROR_LOG
 fi
 
@@ -280,13 +257,13 @@ SplitSeq.py group -s "${OUTNAME}-FIN_collapse-unique.fastq" -f CONSCOUNT --num 2
 # Create table of final repertoire
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "ParseHeaders table"
 ParseHeaders.py table -s "${OUTNAME}-FIN_reheader.fastq" \
-    -f ID PRCONS $CREGION_FIELD CONSCOUNT --outname "Final" \
+    -f ID PRCONS CONSCOUNT --outname "Final" \
     >> $PIPELINE_LOG 2> $ERROR_LOG
 ParseHeaders.py table -s "${OUTNAME}-FIN_collapse-unique.fastq" \
-    -f ID PRCONS $CREGION_FIELD CONSCOUNT DUPCOUNT --outname "Final-Unique" \
+    -f ID PRCONS CONSCOUNT DUPCOUNT --outname "Final-Unique" \
     >> $PIPELINE_LOG 2> $ERROR_LOG
 ParseHeaders.py table -s "${OUTNAME}-FIN_collapse-unique_atleast-2.fastq" \
-    -f ID PRCONS $CREGION_FIELD CONSCOUNT DUPCOUNT --outname "Final-Unique-Atleast2" \
+    -f ID PRCONS CONSCOUNT DUPCOUNT --outname "Final-Unique-Atleast2" \
     >> $PIPELINE_LOG 2> $ERROR_LOG
 
 # Process log files
@@ -306,10 +283,6 @@ if $REFERENCE_ASSEMBLY; then
 fi
 if $MASK_LOWQUAL; then
     ParseLog.py -l MaskqualLog.log -f ID MASKED > /dev/null  2> $ERROR_LOG &
-fi
-if $ALIGN_CREGION; then
-    ParseLog.py -l CRegionLog.log -f ID PRIMER ERROR \
-        > /dev/null  2> $ERROR_LOG &
 fi
 wait
 
