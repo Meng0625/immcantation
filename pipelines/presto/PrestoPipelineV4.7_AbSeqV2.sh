@@ -1,8 +1,8 @@
 #!/bin/bash
-# Super script to run the pRESTO 0.4.7 pipeline on AbVitro V2.5 data
+# Super script to run the pRESTO 0.4.7 pipeline on AbVitro V2 data
 # 
 # Author:  Jason Anthony Vander Heiden, Gur Yaari, Namita Gupta
-# Date:    2015.05.31
+# Date:    2015.08.12
 # 
 # Required Arguments:
 #   $1 = read 1 file (C-region start sequence)
@@ -34,7 +34,11 @@ FS_QUAL=20
 FS_MASK=30
 
 # MaskPrimers run parameters
-MP_UIDLEN=17
+# AbVitro library v2.0-2.4 MP_R1_START=15, v2.5 MP_R1_START=17
+MP_R1_MODE="cut"
+MP_R2_MODE="mask"
+MP_R1_START=15
+MP_R2_START=0
 MP_R1_MAXERR=0.2
 MP_R2_MAXERR=0.2
 
@@ -111,16 +115,16 @@ else
     MPR2_FILE=$R2_FILE
 fi
 
-# Identify primers and UID 
+# Identify primers and UIDs
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "MaskPrimers score"
-MaskPrimers.py score -s $MPR1_FILE -p $R1_PRIMERS --mode cut --barcode \
-    --start $MP_UIDLEN --maxerror $MP_R1_MAXERR --nproc $NPROC --log PrimerLogR1.log \
+MaskPrimers.py score -s $MPR1_FILE -p $R1_PRIMERS --mode $MP_R1_MODE --barcode \
+    --start $MP_R1_START --maxerror $MP_R1_MAXERR --nproc $NPROC --log PrimerLogR1.log \
     --outname "${OUTNAME}-R1" --outdir . >> $PIPELINE_LOG 2> $ERROR_LOG
-MaskPrimers.py score -s $MPR2_FILE -p $R2_PRIMERS --mode mask \
-    --start 0 --maxerror $MP_R2_MAXERR --nproc $NPROC --log PrimerLogR2.log \
+MaskPrimers.py score -s $MPR2_FILE -p $R2_PRIMERS --mode $MP_R2_MODE \
+    --start $MP_R2_START --maxerror $MP_R2_MAXERR --nproc $NPROC --log PrimerLogR2.log \
     --outname "${OUTNAME}-R2" --outdir . >> $PIPELINE_LOG 2> $ERROR_LOG
 
-# Assign UIDs to read 1 sequences
+# Assign UIDs to read 2 sequences
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "PairSeq"
 PairSeq.py -1 "${OUTNAME}-R1_primers-pass.fastq" -2 "${OUTNAME}-R2_primers-pass.fastq" \
     --1f BARCODE --coord illumina >> $PIPELINE_LOG 2> $ERROR_LOG
@@ -179,7 +183,7 @@ else
     	--outname "${OUTNAME}-R2" >> $PIPELINE_LOG 2> $ERROR_LOG
 fi
 
-# Assign UIDs to read 1 sequences
+# Syncronize consensus sequence files
 printf "  %2d: %-*s $(date +'%H:%M %D')\n" $((++STEP)) 24 "PairSeq"
 PairSeq.py -1 "${OUTNAME}-R1_consensus-pass.fastq" -2 "${OUTNAME}-R2_consensus-pass.fastq" \
     --coord presto >> $PIPELINE_LOG 2> $ERROR_LOG
